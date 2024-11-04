@@ -5,8 +5,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
+  RouterProvider
 } from "react-router-dom";
-import { RouterProvider } from "react-router";
 import Home from "./component/Home";
 import SignUp from "./component/auth/SignUp";
 import SignIn from "./component/auth/SignIn";
@@ -15,6 +15,7 @@ import Logout from "./component/auth/Logout";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 import HealthCheck from "./component/HealthCheck";
+import Cart from "./component/products/Cart";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
       <Route path="log-out" element={<Logout />} />
+      <Route path="cart" element={<Cart />} />
 
       {/* health check */}
       <Route path="health" element={<HealthCheck />} />

@@ -21,7 +21,7 @@ const SignIn = () => {
 
     
     e.preventDefault();
-    console.log('login', email,password);
+    // console.log('login', email,password);
     let userCredentials = {
       email,
       password,

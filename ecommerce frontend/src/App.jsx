@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
-import "./App.css";
 // import { Button } from "./components/ui/button.jsx";
 import Navbar from "./component/Navbar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCurrentUser } from "./redux/userSlice";
+import { getCartData } from "./redux/cartSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -12,6 +12,15 @@ function App() {
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
+
+  const auth = useSelector((state) => state.user);
+  // console.log(auth.currentUser);
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      dispatch(getCartData());
+    }
+  }, [dispatch,auth]);
 
   return (
     <div className="">

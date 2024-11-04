@@ -5,13 +5,12 @@ const initialState = {
   currentUser: null,
   error: null,
   loading: false,
-  value: "faizan",
 };
 
 export const register = createAsyncThunk(
   "auth/register",
   async (userData, thunkAPI) => {
-    console.log(userData);
+    // console.log(userData);
     try {
       const response = await axios.post("/api/v1/users/register", userData);
       // console.log("response is", response);
@@ -27,7 +26,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   // console.log(user);
   try {
     const response = await axios.post("/api/v1/users/login", user);
-    console.log("response is", response);
+    // console.log("response is", response);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -48,7 +47,7 @@ export const getCurrentUser = createAsyncThunk(
       // console.log("response is", response);
       return response.data;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return thunkAPI.rejectWithValue(error.response.data.errors);
     }
   }
