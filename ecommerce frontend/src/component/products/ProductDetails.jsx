@@ -15,6 +15,8 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
 
+  const [selectedImage, setSelectedImage] = useState(""); // State to manage the selected image
+
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
@@ -23,6 +25,7 @@ const ProductDetails = () => {
         );
         // console.log(response.data.data);
         setProduct(response.data.data);
+        setSelectedImage(response.data.data.image[0]); // Initialize with the first image
       } catch (error) {
         console.error("Error fetching product details:", error);
       }
@@ -55,30 +58,49 @@ const ProductDetails = () => {
   if (!product) return <div>Loading...</div>;
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-blue-200">
       {/* Product Details Section */}
-      <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col lg:flex-row">
+      <div className="p-6 rounded-lg shadow-lg flex flex-col lg:flex-row justify-center items-center">
         {/* Image Section */}
-        <div className="lg:w-1/3 w-full">
+        <div className="lg:w-1/3 w-full flex flex-col items-center">
           <img
-            src={product.image[0]}
+            src={selectedImage}
             alt={product.productname}
-            className="w-full h-80 object-cover rounded-md"
+            className="w-80 h-80 object-cover rounded-md"
           />
+
+          {/* Thumbnails Section */}
+          <div className="flex mt-4 gap-2 overflow-x-auto">
+            {product.image.map((img, index) => (
+              <div
+                key={index}
+                onClick={() => setSelectedImage(img)}
+                className={`cursor-pointer border rounded-md ${
+                  selectedImage === img ? "border-blue-500" : "border-gray-300"
+                }`}
+              >
+                <img
+                  src={img}
+                  alt={`Thumbnail ${index + 1}`}
+                  className="w-20 h-20 object-cover rounded-md border border-gray-300 hover:border-blue-500 transition"
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Product Details Section */}
-        <div className="lg:w-2/3 w-full lg:ml-6 mt-4 lg:mt-0">
+        <div className="lg:w-2/3 w-full lg:ml-6 mt-4 lg:mt-0 text-center lg:text-left">
           <h1 className="text-2xl font-bold">{product.productname}</h1>
           <p className="text-gray-700 mt-2">RS {product.price}</p>
           <p className="text-gray-600 mt-4">{product.description}</p>
 
           {/* Buttons Section */}
           <div className="flex flex-col gap-4 my-3">
-            <button className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 w-1/2">
+            <button className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 w-1/2 mx-auto lg:mx-0">
               Add To Cart
             </button>
-            <button className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 w-1/2">
+            <button className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 w-1/2 mx-auto lg:mx-0">
               Buy Now
             </button>
           </div>
