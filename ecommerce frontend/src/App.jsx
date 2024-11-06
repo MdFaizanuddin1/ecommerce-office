@@ -20,7 +20,7 @@ function App() {
     if (auth.currentUser) {
       dispatch(getCartData());
     }
-  }, [dispatch,auth]);
+  }, [dispatch, auth]);
 
   return (
     <div className="">

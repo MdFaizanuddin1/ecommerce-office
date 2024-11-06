@@ -32,7 +32,7 @@ export const clearCart = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.delete(`/api/v1/cart/clearCart`);
-    //   console.log("response is", response.data);
+      //   console.log("response is", response.data);
       //   itemsQuantityCount = 0;
       return response.data.data;
     } catch (error) {
@@ -45,12 +45,14 @@ export const clearCart = createAsyncThunk(
 export const decreaseQuantity = createAsyncThunk(
   "cart/decreaseQuantity",
   async (product, thunkAPI) => {
+    // console.log("product id is", product.productId);
     try {
       const response = await axios.put(
-        `/api/v1/cart/decreaseQuantity/${product._id}`
+        `/api/v1/cart/decreaseQuantity/${product.productId}`
       );
-      console.log("response is", response.data);
+      // console.log("response is", response.data);
       //   itemsQuantityCount -= itemsQuantityCount;
+      // return response.data.data.cart;
       return response.data.data;
     } catch (error) {
       console.log("error is", error);
@@ -64,7 +66,7 @@ export const getCartData = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(`/api/v1/cart/getCartData`);
-    //   console.log("response is", response.data);
+      //   console.log("response is", response.data);
       return response.data.data;
     } catch (error) {
       console.log("error is", error);
@@ -79,6 +81,9 @@ export const cartSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addToCart.fulfilled, (state, action) => {
+        if (!Array.isArray(state.items)) {
+          state.items = []; // Ensure items is an array
+        }
         const existingItem = state.items.find(
           (item) => item._id === action.payload._id
         );
@@ -93,13 +98,42 @@ export const cartSlice = createSlice({
       })
       .addCase(decreaseQuantity.fulfilled, (state, action) => {
         // Handle local item removal if necessary
+
+        const updatedData = action.payload;
+
+        if (updatedData.deletedCount === 1) {
+          // Item was removed from the cart
+          state.items = state.items.filter(
+            (item) => item._id !== action.meta.arg.productId
+          );
+        } else {
+          // Update quantity if item still exists in cart
+          const updatedItem = updatedData;
+          const existingItem = state.items.find(
+            (item) => item._id === updatedItem._id
+          );
+
+          if (existingItem) {
+            existingItem.quantity = updatedItem.quantity;
+          }
+        }
+
+        // Recalculate total items quantity in the cart
+        state.itemsQuantityCount = state.items.reduce(
+          (total, item) => total + item.quantity,
+          0
+        );
       })
       .addCase(getCartData.fulfilled, (state, action) => {
         state.items = action.payload; // Setting the fetched cart items
-        state.itemsQuantityCount = action.payload.reduce(
-          (total, item) => total + item.quantity,
-          0
-        ); // Calculating total quantity
+        if (Object.keys(action.payload).length !== 0) {
+          state.itemsQuantityCount = action.payload.reduce(
+            (total, item) => total + item.quantity,
+            0
+          ); // Calculating total quantity
+        } else {
+          state.itemsQuantityCount = 0;
+        }
       })
       .addCase(clearCart.fulfilled, (state) => {
         state.items = []; // Clear items
@@ -161,7 +195,6 @@ export const cartSlice = createSlice({
 });
 
 // export const { addItem, clearCart, decreaseQuantity } = cartSlice.actions;
-export const {} = cartSlice.actions;
+export const { _ } = cartSlice.actions;
 
 export default cartSlice.reducer;
-
