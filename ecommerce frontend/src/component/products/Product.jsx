@@ -2,7 +2,7 @@ import { addToCart } from "@/redux/cartSlice";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Product = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
@@ -33,7 +33,8 @@ const Product = () => {
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-blue-200  "
     >
       {products.map((product) => (
-        <div
+        <Link
+          to={`/product/${product._id}`}
           key={product._id}
           className="border p-4 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg hover:border-blue-500 active:scale-100 active:shadow-md"
         >
@@ -83,7 +84,7 @@ const Product = () => {
           >
             Add to Cart
           </button>
-        </div>
+        </Link>
       ))}
     </div>
   );
