@@ -96,7 +96,10 @@ const ProductDetails = () => {
 
           {/* Buttons Section */}
           <div className="flex flex-col gap-4 my-3">
-            <button className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 w-1/2 mx-auto lg:mx-0">
+            <button
+              onClick={() => handleAddToCart(product)}
+              className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 w-1/2 mx-auto lg:mx-0"
+            >
               Add To Cart
             </button>
             <button className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 w-1/2 mx-auto lg:mx-0">
